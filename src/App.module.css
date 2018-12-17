@@ -1,0 +1,62 @@
+.App {
+  text-align: center;
+  overflow: hidden;
+}
+
+.AppLogo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 30px;
+}
+
+.AppHeader {
+  z-index: 9999;
+  margin-top: 30px;
+  background-color: #282c34;
+  min-height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  position: absolute;
+}
+
+.AppLink {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.viewRoot {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.viewRoot .iphoneX {
+  position: absolute;
+  top: 35px;
+  height: 812px;
+  width: 380px;
+  /* 5px visual padding */
+
+  /* background-color: #f4f4f4; */
+
+  border-style: solid;
+  border-width: 1px;
+  border-color: red;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -1,0 +1,31 @@
+.iphone {
+  pointer-events: none;
+  position: fixed;
+  z-index: 1000;
+  left: 50%;
+  width: 50%;
+  margin-left: -25%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.default {
+  background-color: salmon;
+}
+
+.real {
+  background-color: transparent;
+}
+
+.real .img {
+  height: 910px;
+}
+
+.img {
+  height: 100vh;
+}
+
+.fit {
+  background-color: lightgrey;
+}
