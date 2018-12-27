@@ -12,7 +12,8 @@ export default class Classifier extends Component {
     preprocess_sequence: [],
     makePred: false,
     canvasContext: null,
-    top5: []
+    top5: [],
+    top1: ""
   };
   loadModel = this.loadModel.bind(this);
   handleFileUpload = this.handleFileUpload.bind(this);
@@ -51,14 +52,17 @@ export default class Classifier extends Component {
         let tensor = tf.fromPixels(imgData); // second input is optional number of channels
 
         // resize to 28 x 28
-        const resized = tf.image.resizeBilinear(tensor, [224, 224]).toFloat();
+        const resized = tf.image.resizeBilinear(tensor, [299, 299]).toFloat();
 
         // normalize
         const offset = tf.scalar(255.0);
         // sub == subtract
-        const normalized = tf.scalar(1.0).sub(resized.div(offset));
+        // normalized 0 to 1
+        const normalized = resized.div(offset); // resized divided by offset
+        const normalized2 = normalized.sub(tf.scalar(0.5));
+        const normalized3 = normalized2.mul(tf.scalar(2.0));
         // we add a dimension to get a batch shape (??)
-        const batched = normalized.expandDims(0);
+        const batched = normalized3.expandDims(0);
 
         return batched;
       });
@@ -66,6 +70,7 @@ export default class Classifier extends Component {
 
     const pred = this.model.predict(preprocess(imgData)).dataSync();
 
+    console.log("raw prediction");
     console.log(pred);
 
     let predictions = Object.values(pred).map((v, i) => {
@@ -75,16 +80,28 @@ export default class Classifier extends Component {
     predictions = predictions.sort((x, y) =>
       x.value > y.value ? 1 : x.value === y.value ? 0 : -1
     );
-    predictions = predictions.reverse();
 
+    console.log("sorted predictions");
     console.log(predictions.slice(0, 10));
 
-    let classes = predictions.map(v => v.index);
-    classes = this.getClassNames(classes);
+    predictions = predictions.reverse();
+
+    console.log("reverse sorted predictions");
+    console.log(predictions.slice(0, 10));
+
+    let classes = predictions.map(
+      v => this.getClassNames([v.index])[0] + ` (${v.index + 1})`
+    );
 
     console.log("top 5");
     console.log(classes);
-    this.setState({ top5: classes.slice(0, 5), clear: false });
+    console.log("top 1");
+    console.log(classes[0]);
+    this.setState({
+      top5: classes.slice(0, 5),
+      top1: classes[0],
+      clear: false
+    });
   }
 
   componentDidMount() {
@@ -122,6 +139,8 @@ export default class Classifier extends Component {
             <li key={i}>{v}</li>
           ))}
         </ol>
+        <p>4. top result</p>
+        {this.state.top1}
         <p>todo:</p>
         <p>load image in react. currently image is as URI file</p>
         <p>
